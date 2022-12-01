@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <title>理解度チェック</title>
+</head>
+
+<body>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+
+    <h1 id="main_title">今日の理解度チェック</h1>
+
+    <div id="number">
+        番号: <input type="value">
+    </div>
+    <div id="name">
+        氏名: <input type="text">
+    </div>
+
+    <!-- 入力画面  -->
+    <h2>理解をできたものから、順次チェックを入れてください。</h2>
+    <!-- 講義 -->
+    <div id="lecture-box">
+        <h1 id="lecture_title">講　義</h1>
+        <div id="lecture-containar">
+            <div id="lecture">
+                <label><input type="radio" name="check_lec" value="100">100%</label>
+                <label><input type="radio" name="check_lec" value="80">80%</label>
+                <label><input type="radio" name="check_lec" value="50">50%</label>
+                <label><input type="radio" name="check_lec" value="0">詰んだ！</label>
+            </div>
+            <div class="progress">
+                <div id="prgress_lecture" class="progress-bar" role="progressbar" aria-label="Example with label"
+                    aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 例題1 -->
+    <div id="question1-box">
+        <h1 id="question1_title">例 題 1</h1>
+        <div id="question1-containar">
+            <div id="question1">
+                <label><input type="radio" name="check_q1" value="100">100%</label>
+                <label><input type="radio" name="check_q1" value="80">80%</label>
+                <label><input type="radio" name="check_q1" value="50">50%</label>
+                <label><input type="radio" name="check_q1" value="0">詰んだ！</label>
+            </div>
+            <div class="progress">
+                <div id="progress_question1" class="progress-bar" role="progressbar" aria-label="Basic example"
+                    style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 例題2 -->
+    <div id="question2-box">
+        <h1 id="question2_title">例 題 2</h1>
+        <div id="question2-containar">
+            <div id="question2">
+                <label><input type="radio" name="check_q2" value="100">100%</label>
+                <label><input type="radio" name="check_q2" value="80">80%</label>
+                <label><input type="radio" name="check_q2" value="50">50%</label>
+                <label><input type="radio" name="check_q2" value="0">詰んだ！</label>
+            </div>
+            <div class="progress">
+                <div id="progress_question2" class="progress-bar" role="progressbar" aria-label="Basic example"
+                    style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- 課題 -->
+    <div id="question3-box">
+        <h1 id="question3_title">課　題</h1>
+        <div id="question3-containar">
+            <div id="question3">
+                <label><input type="radio" name="check_q3" value="100">100%</label>
+                <label><input type="radio" name="check_q3" value="80">80%</label>
+                <label><input type="radio" name="check_q3" value="50">50%</label>
+                <label><input type="radio" name="check_q3" value="0">詰んだ！</label>
+            </div>
+            <div class="progress">
+                <div id="progress_question3" class="progress-bar" role="progressbar" aria-label="Basic example"
+                    style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="send_button">
+        <button type="button" class="btn btn-secondary" id="send">送信</button>
+        <!-- <button type="button" class="btn btn-outline-primary" id="send">送信</button> -->
+        <!-- <button type="button" id="send">send</button> -->
+    </div>
+
+
+    <!-- ////////////////////// -->
+    <!-- javascript /////////////////////////////////////////////// -->
+    <script>
+        // 日時をいい感じの形式にする関数
+        function convertTimestampToDatetime(timestamp) {
+            const _d = timestamp ? new Date(timestamp * 1000) : new Date();
+            const Y = _d.getFullYear();
+            const m = (_d.getMonth() + 1).toString().padStart(2, '0');
+            const d = _d.getDate().toString().padStart(2, '0');
+            const H = _d.getHours().toString().padStart(2, '0');
+            const i = _d.getMinutes().toString().padStart(2, '0');
+            const s = _d.getSeconds().toString().padStart(2, '0');
+            return `${Y}/${m}/${d} ${H}:${i}:${s}`;
+        }
+    </script>
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.14.0/firebase-app.js";
+        // TODO: Add SDKs for Firebase products that you want to use
+        // https://firebase.google.com/docs/web/setup#available-libraries
+
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyDq2AKxud_OuAlwM_jT5O54M0jVsckSg-I",
+            authDomain: "comprehension-2d647.firebaseapp.com",
+            projectId: "comprehension-2d647",
+            storageBucket: "comprehension-2d647.appspot.com",
+            messagingSenderId: "784839392260",
+            appId: "1:784839392260:web:b94db3bbdc3ab61db3c951"
+        };
+
+        import {
+            getFirestore,
+            collection,
+            addDoc,
+            serverTimestamp,
+            onSnapshot,
+        } from "https://www.gstatic.com/firebasejs/9.14.0/firebase-firestore.js";
+
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        $("#send").on("click", function () {
+            //ラジオボタンから各valを取得(lecture_val)//
+            let check_lecRadio = document.getElementsByName('check_lec');
+            let len = check_lecRadio.length;
+
+            let lecture_val = '';
+
+            for (let i = 0; i < len; i++) {
+                if (check_lecRadio.item(i).checked) {
+                    lecture_val = check_lecRadio.item(i).value;
+                }
+            }
+            console.log(lecture_val);
+
+            //ラジオボタンから各valを取得(question1_val)//
+            let check_q1Radio = document.getElementsByName('check_q1');
+            let lenq1 = check_q1Radio.length;
+
+            let question1_val = '';
+
+            for (let i = 0; i < lenq1; i++) {
+                if (check_q1Radio.item(i).checked) {
+                    question1_val = check_q1Radio.item(i).value;
+                }
+            }
+            console.log(question1_val);
+
+            //ラジオボタンから各valを取得(question2_val)//
+            let check_q2Radio = document.getElementsByName('check_q2');
+            let lenq2 = check_q2Radio.length;
+
+            let question2_val = '';
+
+            for (let i = 0; i < lenq2; i++) {
+                if (check_q2Radio.item(i).checked) {
+                    question2_val = check_q2Radio.item(i).value;
+                }
+            }
+            console.log(question2_val);
+
+            //ラジオボタンから各valを取得(question3_val)//
+            let check_q3Radio = document.getElementsByName('check_q3');
+            let lenq3 = check_q3Radio.length;
+
+            let question3_val = '';
+
+            for (let i = 0; i < lenq3; i++) {
+                if (check_q3Radio.item(i).checked) {
+                    question3_val = check_q3Radio.item(i).value;
+                }
+            }
+            console.log(question3_val);
+
+            // postDataの作成  ⇨ データの送信//
+            const postData = {
+                number: $("#number").val(),
+                name: $("#name").val(),
+                lecture: lecture_val,
+                question1: question1_val,
+                question2: question2_val,
+                question3: question3_val,
+            };
+
+            console.log(postData);
+            addDoc(collection(db, "studentData2"), postData);
+        })
+
+
+        //情報を取得:documents（object形式)生成
+        onSnapshot(collection(db, "studentData2"), (querySnapshot) => {
+            const documents = [];
+
+            querySnapshot.docs.forEach(function (doc) {
+                const document = {
+                    id: doc.id,
+                    data: doc.data(),
+                };
+                documents.push(document);
+
+            });
+            console.log(documents);
+
+            //documentsから、「講義」理解度割合作成//////////////////////////////////////////////////////
+
+            //まずいつものやり方で、配列を生成（文字列）
+            const lecture_array = [];
+            documents.forEach(function (document) {
+                lecture_array.push(`${document.data.lecture}`)
+            });
+            console.log(lecture_array);
+
+            //作った配列（文字列）を配列（数値）へ変換
+            const lecture_number = [];
+            for (let i = 0; i <= lecture_array.length - 1; i++) {
+                lecture_number.push(Number(lecture_array[i]));
+            }
+            console.log(lecture_number);
+
+            //入力者全員の平均値計算
+            let lecture_sum = 0;
+            for (let i = 0; i <= lecture_array.length - 1; i++) {
+                lecture_sum += lecture_number[i];
+            }
+            const lecture_average = lecture_sum / lecture_number.length;
+            console.log(lecture_average);
+
+            const lecture_point = Math.floor(lecture_average, 0);
+
+            //出力
+            document.getElementById("prgress_lecture").style.width = lecture_point + "%";
+            $("#prgress_lecture").html(lecture_point + "%");
+            //documentsから、「例題1」理解度割合作成//////////////////////////////////////////////////////
+
+            //まずいつものやり方で、配列を生成（文字列）
+            const question1_array = [];
+            documents.forEach(function (document) {
+                question1_array.push(`${document.data.question1}`)
+            });
+            console.log(question1_array);
+
+            //作った配列（文字列）を配列（数値）へ変換
+            const question1_number = [];
+            for (let i = 0; i <= question1_array.length - 1; i++) {
+                question1_number.push(Number(question1_array[i]));
+            }
+            console.log(question1_number);
+
+            //入力者全員の平均値計算
+            let question1_sum = 0;
+            for (let i = 0; i <= question1_array.length - 1; i++) {
+                question1_sum += question1_number[i];
+            }
+            const question1_average = question1_sum / question1_number.length;
+            console.log(question1_average);
+            const question1_point = Math.floor(question1_average, 0);
+
+            //出力
+            document.getElementById("progress_question1").style.width = question1_point + "%";
+            $("#progress_question1").html(question1_point + "%");
+
+            //documentsから、「例題2」理解度割合作成//////////////////////////////////////////////////////
+
+            //まずいつものやり方で、配列を生成（文字列）
+            const question2_array = [];
+            documents.forEach(function (document) {
+                question2_array.push(`${document.data.question2}`)
+            });
+            console.log(question2_array);
+
+            //作った配列（文字列）を配列（数値）へ変換
+            const question2_number = [];
+            for (let i = 0; i <= question2_array.length - 1; i++) {
+                question2_number.push(Number(question2_array[i]));
+            }
+            console.log(question2_number);
+
+            //入力者全員の平均値計算
+            let question2_sum = 0;
+            for (let i = 0; i <= question2_array.length - 1; i++) {
+                question2_sum += question2_number[i];
+            }
+            const question2_average = question2_sum / question2_number.length;
+            console.log(question2_average);
+            const question2_point = Math.floor(question2_average, 0);
+            //出力
+            document.getElementById("progress_question2").style.width = question2_point + "%";
+            $("#progress_question2").html(question2_point + "%");
+
+            //documentsから、「課題」理解度割合作成//////////////////////////////////////////////////////
+
+            //まずいつものやり方で、配列を生成（文字列）
+            const question3_array = [];
+            documents.forEach(function (document) {
+                question3_array.push(`${document.data.question3}`)
+            });
+            console.log(question3_array);
+
+            //作った配列（文字列）を配列（数値）へ変換
+            const question3_number = [];
+            for (let i = 0; i <= question3_array.length - 1; i++) {
+                question3_number.push(Number(question3_array[i]));
+            }
+            console.log(question3_number);
+
+            //入力者全員の平均値計算
+            let question3_sum = 0;
+            for (let i = 0; i <= question3_array.length - 1; i++) {
+                question3_sum += question3_number[i];
+            }
+            const question3_average = question3_sum / question3_number.length;
+            console.log(question3_average);
+            const question3_point = Math.floor(question3_average, 0);
+
+            //出力
+            document.getElementById("progress_question3").style.width = question3_point + "%";
+            $("#progress_question3").html(question3_point + "%");
+
+        })
+
+    </script>
+
+</body>
+
+</html>
